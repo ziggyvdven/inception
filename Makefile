@@ -1,6 +1,6 @@
 start:
-	# @mkdir -p /home/ziggy/data/database
-	# @mkdir -p /home/ziggy/data/web
+	@mkdir -p /home/ziggy/data/database
+	@mkdir -p /home/ziggy/data/web
 	docker compose -f ./srcs/docker-compose.yml up -d --build
 stop:
 	docker compose -f ./srcs/docker-compose.yml down
