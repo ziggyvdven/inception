@@ -14,7 +14,7 @@ if [ ! -f wp-config.php ]; then
     ./wp-cli.phar config create --dbname=wordpress --dbuser=wpuser --dbpass=password --dbhost=mariadb:3306 --allow-root
 
     # auto-installs WordPress.
-    ./wp-cli.phar core install --url=localhost --title=inception --admin_user=admin --admin_password=admin --admin_email=admin@admin.com --allow-root
+    ./wp-cli.phar core install --url=localhost --title=inception --admin_user=$WORDPRESS_USER --admin_password=$(cat /run/secrets/credentials) --admin_email=$WORDPRESS_EMAIL --allow-root
 else
     echo "WordPress is already installed. Skipping download and configuration."
 fi

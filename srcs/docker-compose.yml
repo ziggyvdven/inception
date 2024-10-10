@@ -56,16 +56,6 @@ secrets:
   credentials:
     file: ../secrets/wordpress_admin_password.txt
 
-# volumes:
-#   mariadb:
-#     driver: local # ici nous stockons le volume en local
-#     driver_opts:
-#         type: 'none' # aucun type spécifique
-#         o: 'bind'
-#         device: '/home/ziggy/data/mariadb' 
-  # wordpress:
-  #   driver: local # ici nous stockons le volume en local
-  #   driver_opts:
-  #       type: 'none' # aucun type spécifique
-  #       o: 'bind'
-  #       device: '/home/ziggy/data/wordpress' 
+volumes:
+  database:
+  web:
