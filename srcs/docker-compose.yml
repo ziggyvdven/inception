@@ -11,7 +11,7 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     volumes:
-      - ./web:/var/www/html
+      - web:/var/www/html
     ports:
       - "80:80"
     restart: on-failure
@@ -24,13 +24,14 @@ services:
       context: requirements/wordpress
       dockerfile: Dockerfile
     volumes:
-      - /home/ziggy/data/web:/var/www/html
+      - web:/var/www/html
     expose:
       - "9000"
     depends_on:
       - mariadb
     secrets:
-      - credentials
+      - wp_password
+      - db_password
     env_file:
       - .env
     restart: on-failure
@@ -42,20 +43,36 @@ services:
       dockerfile: Dockerfile
     networks:
       - inception
-    env_file: .env
     volumes:
-      - /home/ziggy/data/database:/var/lib/mysql
+      - database:/var/lib/mysql
     expose:
       - "3306"
+    secrets:
+      - db_password
+    env_file: .env
     restart: unless-stopped
 
 networks:
   inception:
 
 secrets:
-  credentials:
+  wp_password:
     file: ../secrets/wordpress_admin_password.txt
+  db_password:
+    file: ../secrets/db_password.txt
 
 volumes:
   database:
+    name: database
+    driver: local
+    driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: '/home/ziggy/data/database' 
   web:
+    name: web
+    driver: local
+    driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: '/home/ziggy/data/web' 
