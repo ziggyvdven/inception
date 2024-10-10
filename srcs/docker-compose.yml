@@ -1,0 +1,71 @@
+services:
+  nginx:
+    container_name: nginx
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+      - mariadb
+    build:
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      - ./web:/var/www/html
+    ports:
+      - "80:80"
+    restart: on-failure
+
+  wordpress:
+    container_name: wp-php
+    networks:
+      - inception
+    build:
+      context: requirements/wordpress
+      dockerfile: Dockerfile
+    volumes:
+      - /home/ziggy/data/web:/var/www/html
+    expose:
+      - "9000"
+    depends_on:
+      - mariadb
+    secrets:
+      - credentials
+    env_file:
+      - .env
+    restart: on-failure
+
+  mariadb:
+    container_name: mariadb
+    build:
+      context: requirements/mariadb
+      dockerfile: Dockerfile
+    networks:
+      - inception
+    env_file: .env
+    volumes:
+      - /home/ziggy/data/database:/var/lib/mysql
+    expose:
+      - "3306"
+    restart: unless-stopped
+
+networks:
+  inception:
+
+secrets:
+  credentials:
+    file: ../secrets/wordpress_admin_password.txt
+
+# volumes:
+#   mariadb:
+#     driver: local # ici nous stockons le volume en local
+#     driver_opts:
+#         type: 'none' # aucun type spécifique
+#         o: 'bind'
+#         device: '/home/ziggy/data/mariadb' 
+  # wordpress:
+  #   driver: local # ici nous stockons le volume en local
+  #   driver_opts:
+  #       type: 'none' # aucun type spécifique
+  #       o: 'bind'
+  #       device: '/home/ziggy/data/wordpress' 
